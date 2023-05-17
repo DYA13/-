@@ -25,7 +25,15 @@ const createTask = async (req, res) => {
 };
 
 const deleteTask = async (req, res) => {
-  res.send("in deleteTask");
+  try {
+    const taskId = req.params.id;
+    await Task.findByIdAndDelete(taskId);
+    req.session.pendingMessage = "The task was deleted.";
+    res.redirect("/tasks");
+  } catch (err) {
+    req.session.pendingMessage = "Something went wrong.";
+    res.redirect("/tasks");
+  }
 };
 
 const editTask = async (req, res) => {
