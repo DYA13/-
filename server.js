@@ -1,3 +1,5 @@
+const taskRouter = require("./routes/tasks");
+const setMessage = require("./middleware/message");
 require("dotenv").config();
 const connectDB = require("./db/connect");
 const session = require("express-session");
@@ -6,6 +8,16 @@ var app = express();
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(express.urlencoded({ extended: false }));
+app.use("/tasks", setMessage, taskRouter);
 
 // use res.render to load up an ejs view file
 
