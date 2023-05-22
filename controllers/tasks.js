@@ -25,13 +25,12 @@ const createTask = async (req, res) => {
 };
 
 const deleteTask = async (req, res) => {
-  try {
-    const taskId = req.params.id;
-    await Task.findByIdAndDelete(taskId);
+  const taskId = req.params.id;
+  const task = Task.findByIdAndDelete(taskId);
+  if (!task) {
+    req.session.pendingMessage = `Could not delete, no task with id ${taskId} exists.`;
+  } else {
     req.session.pendingMessage = "The task was deleted.";
-    res.redirect("/tasks");
-  } catch (err) {
-    req.session.pendingMessage = "Something went wrong.";
     res.redirect("/tasks");
   }
 };
